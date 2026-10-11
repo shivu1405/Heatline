@@ -29,7 +29,7 @@ Heat stress can cause dizziness and fainting and, at its worst, heat stroke. The
 
 Phone-assisted reporting is how HeatLine reaches workers with a basic phone or low literacy today. Every question is a yes or no, or a number, so nothing has to be typed or read by the worker. The helper must confirm that the worker agreed before the report is saved.
 
-A direct call line (the worker presses 1 for yes and 2 for no) is **designed and simulated, not live**. See [Phone line prototype](#phone-line-prototype-not-live).
+A direct call line (the worker presses 1 for yes and 2 for no) is **designed and simulated, not live**.
 
 ## Architecture
 

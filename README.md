@@ -187,8 +187,22 @@ heatline-phone-demo.html   Simulated call and SMS demo
 
 Add the `heatline-api` Lambda source to the repository if it is not already there.
 
+## Images 
+
+A few insights into the system 
+<img width="1917" height="985" alt="image" src="https://github.com/user-attachments/assets/f8306ba5-8a5a-4573-940b-7481f3faa90f" />
+
+<img width="1901" height="788" alt="image" src="https://github.com/user-attachments/assets/08009d1c-3140-4cdd-9585-82e0363edc3e" />
+
+<img width="1908" height="977" alt="image" src="https://github.com/user-attachments/assets/15de76e3-9e01-4fe0-a62b-8cca3591c78c" />
+
+<img width="1912" height="427" alt="image" src="https://github.com/user-attachments/assets/4ade7d3b-03a8-4bb7-9d43-004a433f740d" />
+
+
 ## Team Members
 
 Shivasri S
+
 Yashaswini S 
+
 Shri Raama Krishnan J

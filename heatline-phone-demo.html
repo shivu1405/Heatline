@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>HeatLine | Reporting without a smartphone</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Silkscreen:wght@700&display=swap" rel="stylesheet">
+<style>
+:root{--bg1:#F9FAFF;--bg2:#DCE4FF;--ink:#0A1640;--slate:#55627A;--line:#DDE3F5;--card:#FFFFFF;--blue:#3B63F5;--peri:#E4EAFF;--navy:#0A1640;--ok:#1B7F4B;--warn:#B93A09;--warnbg:#FDEBE3;--lcd:#D8E1F2;--lcdink:#0A1640}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg1:#0B1230;--bg2:#070B20;--ink:#EAF0FF;--slate:#9FB0DC;--line:#24306B;--card:#101A44;--peri:#1B2A66;--navy:#050A24;--warnbg:#3A1A10;--lcd:#C9D5EC}}
+:root[data-theme="dark"]{--bg1:#0B1230;--bg2:#070B20;--ink:#EAF0FF;--slate:#9FB0DC;--line:#24306B;--card:#101A44;--peri:#1B2A66;--navy:#050A24;--warnbg:#3A1A10;--lcd:#C9D5EC}
+*{box-sizing:border-box}
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;font-family:'Inter',system-ui,sans-serif;color:var(--ink);background:linear-gradient(180deg,var(--bg1),var(--bg2));min-height:100vh}
+.wrap{max-width:1040px;margin:0 auto;padding:2rem 1.2rem 3rem}
+h1{font-weight:600;font-size:clamp(1.7rem,4vw,2.5rem);letter-spacing:-.03em;line-height:1.1;margin:.4rem 0 .7rem}
+.lead{color:var(--slate);max-width:620px;line-height:1.6;margin:0 0 1.2rem}
+.badges{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1.4rem}
+.b{font-size:.8rem;padding:5px 12px;border-radius:999px;border:1px solid var(--line);background:var(--card)}
+.b.live{border-color:#9AD6B4}.b.sim{border-color:#F5C4A5}
+.tabs{display:inline-flex;gap:4px;padding:5px;border-radius:999px;background:var(--card);border:1px solid var(--line);margin-bottom:1.4rem}
+.tabs button{border:0;background:transparent;color:var(--slate);font:500 .92rem Inter;padding:9px 22px;border-radius:999px;cursor:pointer}
+.tabs button[aria-pressed="true"]{background:var(--navy);color:#fff}
+.grid{display:grid;grid-template-columns:320px 1fr;gap:28px;align-items:start}
+@media(max-width:860px){.grid{grid-template-columns:1fr}.phone{margin:0 auto}}
+.phone{width:300px;background:linear-gradient(180deg,#1B2F8F,#0A1640);border-radius:34px 34px 44px 44px;padding:20px 18px 22px;box-shadow:0 30px 60px -24px rgba(10,22,64,.7),inset 0 0 0 2px rgba(140,165,255,.25)}
+.brandline{font:700 .7rem Silkscreen;color:#9DB4FF;text-align:center;letter-spacing:.12em;margin-bottom:10px}
+.screen{background:var(--lcd);color:var(--lcdink);border-radius:12px;height:300px;display:flex;flex-direction:column;overflow:hidden;box-shadow:inset 0 2px 8px rgba(0,0,0,.25)}
+.sbar{font:500 .68rem 'JetBrains Mono';padding:6px 10px;border-bottom:1px solid rgba(10,22,64,.2);display:flex;justify-content:space-between}
+.log{flex:1;overflow-y:auto;padding:8px 10px;display:flex;flex-direction:column;gap:6px;font:400 .74rem/1.4 'JetBrains Mono'}
+.m{max-width:88%;padding:5px 8px;border-radius:7px}
+.m.bot{background:rgba(10,22,64,.1);align-self:flex-start}
+.m.me{background:var(--navy);color:#fff;align-self:flex-end}
+.m.bot.call::before{content:"voice: ";opacity:.6}
+.compose{border-top:1px solid rgba(10,22,64,.2);padding:6px 10px;font:500 .78rem 'JetBrains Mono';min-height:30px}
+.compose i{font-style:normal;animation:bl 1s steps(1) infinite}@keyframes bl{50%{opacity:0}}
+.keys{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}
+.keys button{height:40px;border:0;border-radius:10px;background:rgba(255,255,255,.12);color:#fff;font:500 1rem Inter;cursor:pointer}
+.keys button:hover{background:rgba(255,255,255,.22)}
+.keys button:focus-visible,.cta:focus-visible,.tabs button:focus-visible{outline:3px solid #9DB4FF;outline-offset:2px}
+.keys button.ok{background:#1B7F4B;font-size:.82rem}
+.keys button:disabled{opacity:.35;cursor:default}
+.cta{margin-top:14px;width:100%;border:0;border-radius:999px;padding:12px;font:600 .95rem Inter;color:#fff;background:linear-gradient(180deg,#1B2F8F,#0A1640);box-shadow:inset 0 0 0 2px rgba(120,150,255,.55);cursor:pointer}
+.card{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:1.3rem 1.5rem;margin-bottom:16px}
+.card h2{font-size:1rem;font-weight:600;margin:0 0 .3rem}
+.card p.s{color:var(--slate);font-size:.86rem;margin:0 0 1rem;line-height:1.5}
+.flow{display:flex;flex-direction:column;gap:8px}
+.node{display:flex;gap:12px;align-items:center;padding:10px 14px;border-radius:14px;border:1px solid var(--line);opacity:.55;transition:all .3s}
+.node.on{opacity:1;border-color:var(--blue);background:var(--peri)}
+.node.done{opacity:1}
+.node.skip{opacity:.4;border-style:dashed}
+.node .d{width:10px;height:10px;border-radius:50%;background:var(--line);flex:none}
+.node.on .d{background:var(--blue);box-shadow:0 0 0 4px rgba(59,99,245,.25)}.node.done .d{background:var(--ok)}
+.node b{display:block;font-size:.9rem;font-weight:600}.node span{font-size:.78rem;color:var(--slate)}
+pre{margin:0;background:var(--navy);color:#B9C7F5;border-radius:14px;padding:12px 14px;font:400 .74rem/1.55 'JetBrains Mono';overflow-x:auto;max-width:100%}
+.res{display:none}.res.show{display:block}
+.score{display:flex;justify-content:space-between;font-size:.86rem;padding:5px 0;border-bottom:1px solid var(--line)}
+.score .p{font-family:'JetBrains Mono';color:var(--blue)}
+.tier{display:inline-block;font-weight:600;padding:3px 14px;border-radius:999px;background:var(--peri)}
+.tier.hi{background:var(--warnbg);color:var(--warn)}
+.note{font-size:.8rem;color:var(--slate);margin-top:1rem;line-height:1.5}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Reporting heat danger without a smartphone.</h1>
+  <p class="lead">A worker with a basic phone can report by calling a number or sending a text. No app, no data plan, no form. Try it below: press the keys like a real phone.</p>
+  <div class="badges">
+    <span class="b live">Live today: a helper files the report in the web app</span>
+    <span class="b sim">Simulated here: direct call and SMS</span>
+  </div>
+  <div class="tabs" role="group" aria-label="Channel">
+    <button id="tCall" aria-pressed="true">Call a number</button>
+    <button id="tSms" aria-pressed="false">Send a text</button>
+  </div>
+  <div class="grid">
+    <div>
+      <div class="phone">
+        <div class="brandline">BASIC PHONE</div>
+        <div class="screen">
+          <div class="sbar"><span id="sTitle">Call</span><span id="sInfo">idle</span></div>
+          <div class="log" id="log" aria-live="polite"></div>
+          <div class="compose" id="compose"></div>
+        </div>
+        <div class="keys" id="keys"></div>
+      </div>
+      <button class="cta" id="start"></button>
+    </div>
+    <div>
+      <div class="card">
+        <h2>What happens behind the scenes</h2>
+        <p class="s">Each answer you key in is collected, then sent through the same backend as the web app.</p>
+        <div class="flow" id="flow"></div>
+      </div>
+      <div class="card res" id="res">
+        <h2>The report</h2>
+        <p class="s" id="resHead"></p>
+        <div id="scoreRows"></div>
+        <pre id="payload"></pre>
+      </div>
+      <p class="note">This page is a simulation. A real call line needs Amazon Connect and a claimed number, and SMS needs a registered sender in the worker's country. Scoring uses the same points as HeatLine's risk model. The caller's number would be captured automatically from caller ID.</p>
+    </div>
+  </div>
+</div>
+<script>
+const act=m=>m==='call'?'Press':'Reply';
+const yn=m=>`${act(m)} 1 for yes, 2 for no.`;
+const Q=[
+{k:'consent',t:m=>m==='call'?'Welcome to HeatLine. Press 1 if you agree to share this heat report, or 2 to stop.':'HeatLine: reply 1 to agree to share this heat report, or 2 to stop.',ty:'c',max:2},
+{k:'workType',t:m=>`What work do you do? ${act(m)} 1 construction, 2 delivery, 3 waste, 4 street vending, 5 agriculture, 6 factory, 7 other.`,ty:'c',max:7},
+{k:'temperature',t:m=>m==='call'?'Enter the temperature in degrees, then press OK.':'Reply with the temperature in degrees C.',ty:'n',min:20,max:55},
+{k:'humidity',t:m=>m==='call'?'Enter the humidity percent, then press OK.':'Reply with the humidity percent.',ty:'n',min:0,max:100},
+{k:'water',t:m=>`Is clean drinking water available? ${yn(m)}`,ty:'c',max:2},
+{k:'shade',t:m=>`Is there shade or a rest area? ${yn(m)}`,ty:'c',max:2},
+{k:'restBreak',t:m=>`Did you take a rest break recently? ${yn(m)}`,ty:'c',max:2},
+{k:'symptoms',t:m=>`Do you feel dizzy, very tired or unwell? ${yn(m)}`,ty:'c',max:2}];
+const WT=['','Construction','Delivery','Waste collection','Street vending','Agriculture','Factory work','Other'];
+const NODES=[['Basic phone','No internet needed'],['','' ],['Bridge Lambda','Turns keypad answers into a report'],['heatline-api','Validates and scores the risk'],['DynamoDB','Stores the report'],['SNS email alert','Only for High or Extreme risk']];
+let mode='call',step=-1,buf='',ans={},busy=false,over=true;
+const $=id=>document.getElementById(id);
+function renderFlow(state){ $('flow').innerHTML=NODES.map((n,i)=>{const t=i===1?(mode==='call'?['Amazon Connect','Answers the call and runs the menu']:['AWS End User Messaging','Receives the text and replies']):n;return `<div class="node ${state[i]||''}"><i class="d"></i><div><b>${t[0]}</b><span>${state[i]==='skip'?'Not triggered: risk is below High':t[1]}</span></div></div>`}).join('')}
+function log(who,text){const d=document.createElement('div');d.className='m '+who+(who==='bot'&&mode==='call'?' call':'');d.textContent=text;$('log').appendChild(d);$('log').scrollTop=1e5}
+function say(text,cb){busy=true;setTimeout(()=>{log('bot',text);busy=false;draw();cb&&cb()},450)}
+function draw(){const q=Q[step];$('compose').innerHTML=over?'':(mode==='call'?'Keypad: ':'Message: ')+buf+'<i>_</i>';
+ $('sTitle').textContent=mode==='call'?'Call':'Messages';$('sInfo').textContent=over?(step>=Q.length?'ended':'idle'):(mode==='call'?'in call':'chat');
+ const sendKey=document.querySelector('.keys .ok');if(sendKey)sendKey.textContent=mode==='call'?'OK':'Send';
+ document.querySelectorAll('.keys button').forEach(b=>b.disabled=over||busy);
+ $('start').textContent=over&&step>=Q.length?'Run it again':(over?(mode==='call'?'Start the call':'Send "HEAT"'):'Restart');}
+function reset(){step=-1;buf='';ans={};over=true;busy=false;$('log').innerHTML='';$('res').classList.remove('show');renderFlow({});draw()}
+function begin(){reset();over=false;step=0;if(mode==='sms')log('me','HEAT');else log('me','(dials the number)');renderFlow({0:'on'});say(Q[0].t(mode))}
+function submit(){if(over||busy||!buf)return;const q=Q[step],v=parseInt(buf,10);log('me',buf);buf='';
+ const bad=q.ty==='c'?!(v>=1&&v<=q.max):!(v>=q.min&&v<=q.max);
+ if(bad){say(`Sorry, that did not work. ${q.t(mode)}`);return}
+ if(q.k==='consent'&&v===2){over=true;step=Q.length;say('No problem. Nothing was saved. Goodbye.');return}
+ ans[q.k]=v;step++;
+ if(step<Q.length)say(Q[step].t(mode));else finish()}
+function press(d){if(over||busy)return;const q=Q[step];
+ if(mode==='call'&&q.ty==='c'){buf=d;draw();submit();return}
+ if(buf.length<3){buf+=d;draw()}}
+function finish(){over=true;step=Q.length;draw();
+ const t=ans.temperature,h=ans.humidity,pts=[];
+ pts.push([`Temperature ${t}°C`,t>=40?40:t>=37?30:t>=34?20:0]);pts.push([`Humidity ${h}%`,h>=70?20:h>=55?10:0]);
+ pts.push(['No drinking water',ans.water===2?20:0]);pts.push(['No shade or rest area',ans.shade===2?15:0]);
+ pts.push(['No recent rest break',ans.restBreak===2?10:0]);pts.push(['Reports symptoms',ans.symptoms===1?25:0]);
+ const total=pts.reduce((a,p)=>a+p[1],0),lvl=total>=75?'Extreme':total>=55?'High':total>=35?'Moderate':'Low',alert=total>=55;
+ $('scoreRows').innerHTML=pts.map(p=>`<div class="score"><span>${p[0]}</span><span class="p">+${p[1]}</span></div>`).join('');
+ $('resHead').innerHTML=`Score ${total} · <span class="tier ${alert?'hi':''}">${lvl}</span> · ${alert?'alert sent to the HeatLine team':'saved, no alert needed'}`;
+ const body={channel:mode==='call'?'ivr':'sms',workerPhone:'(from caller ID)',consentConfirmed:true,workType:WT[ans.workType],temperature:t,humidity:h,waterAvailable:ans.water===1,shadeAvailable:ans.shade===1,restBreakTaken:ans.restBreak===1,symptoms:ans.symptoms===1};
+ $('payload').textContent=JSON.stringify(body,null,2)+'\n// response: '+JSON.stringify({riskScore:total,riskLevel:lvl,alertSent:alert});
+ $('res').classList.add('show');
+ const state={};const order=[0,1,2,3,4,5];
+ order.forEach((n,i)=>setTimeout(()=>{order.slice(0,i).forEach(j=>state[j]='done');state[n]=(n===5&&!alert)?'skip':'on';if(n===5&&!alert)state[n]='skip';renderFlow(state);
+  if(i===order.length-1)setTimeout(()=>{state[n]=alert?'done':'skip';renderFlow(state)},500)},i*550));
+ const msg=`Your report is saved. Risk level: ${lvl}.`+(alert?' Drink water, move to shade and rest now. An alert has been sent.':'');
+ setTimeout(()=>say(mode==='call'?msg:msg),order.length*350)}
+$('keys').innerHTML=[1,2,3,4,5,6,7,8,9].map(n=>`<button data-k="${n}" aria-label="${n}">${n}</button>`).join('')+'<button data-k="back" aria-label="Delete">⌫</button><button data-k="0" aria-label="0">0</button><button class="ok" data-k="ok">OK</button>';
+$('keys').addEventListener('click',e=>{const k=e.target.dataset&&e.target.dataset.k;if(k==null)return;if(k==='ok')submit();else if(k==='back'){buf=buf.slice(0,-1);draw()}else press(k)});
+document.addEventListener('keydown',e=>{if(/^[0-9]$/.test(e.key))press(e.key);else if(e.key==='Enter')submit();else if(e.key==='Backspace'){buf=buf.slice(0,-1);draw()}});
+$('start').onclick=begin;
+function setMode(m){mode=m;$('tCall').setAttribute('aria-pressed',m==='call');$('tSms').setAttribute('aria-pressed',m==='sms');reset()}
+$('tCall').onclick=()=>setMode('call');$('tSms').onclick=()=>setMode('sms');
+reset();
+</script>
+</body>
+</html>
